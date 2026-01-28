@@ -3,9 +3,8 @@ const faker = require('faker');
 
 const app = express();
 
-let messages = []; // Хранилище сообщений
+let messages = [];
 
-// Функция для генерации нового сообщения
 function generateMessage() {
     return {
         id: faker.datatype.uuid(),
@@ -16,13 +15,13 @@ function generateMessage() {
     };
 }
 
-// Генерация сообщений каждые 3 секунды
 setInterval(() => {
     const newMessage = generateMessage();
     messages.push(newMessage);
+
+    if (messages.length > 100) messages = messages.slice(-100);
 }, 3000);
 
-// Endpoint для получения всех сообщений
 app.get('/api/messages/unread', (req, res) => {
     res.json({
         status: 'ok',
@@ -31,5 +30,4 @@ app.get('/api/messages/unread', (req, res) => {
     });
 });
 
-// Запуск сервера
 module.exports = app;
